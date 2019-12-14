@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+canvas{
+background:black;
+}
+</style>
+<title></title>
+</head>
+<body>
+
+<canvas id="myCanvas" width="1350" height="600" 
+style="border:1px solid #000000;">
+
+Your browser does not support the canvas element.
+</canvas>
+
+<script>
+var canvas=document.getElementById("myCanvas");
+var ctx=canvas.getContext("2d");
+var dir,score,balls,food;
+function init(){
+dir='right';
+score=0;
+balls=[
+         {x:0,y:40},
+           {x:20,y:40},
+		    {x:40,y:40}];
+creatFood();
+
+}
+function creatFood()
+{
+
+food={x:Math.floor(Math.random()*66),y:Math.floor(Math.random()*28)};
+for(var i=0;i<balls.length;i++)
+{
+var ball=balls[i];
+if(food.x==ball.x**food.y==ball.y)
+{
+creatFood();
+}
+}
+}
+init();
+document.addEventListener("keydown",function(e){
+var keyCode=e.keyCode;
+if(keyCode==37&& dir!='right')
+{
+dir='left';
+}
+if(keyCode==38&& dir!='down')
+{
+dir='up';
+}
+if(keyCode==39&& dir!='left')
+{
+dir='right';
+}
+if(keyCode==40&& dir!='up')
+{
+dir='down';
+}
+
+})
+function add(){
+var lastBall=balls[balls.length-1];
+if(dir=='right')
+{
+balls.push({x:lastBall.x+20,y:lastBall.y});
+}
+if(dir=='left')
+{
+balls.push({x:lastBall.x-20,y:lastBall.y});
+}
+if(dir=='up')
+{
+balls.push({x:lastBall.x,y:lastBall.y-20});
+}if(dir=='down')
+{
+balls.push({x:lastBall.x,y:lastBall.y+20});
+}
+
+}
+function ani()
+{
+ctx.clearRect(0,0,1350,600);
+balls.shift();
+add();
+var lastBall=balls[balls.length-1];
+if(lastBall.x==food.x*20 && lastBall.y==food.y*20)
+{
+score+=5;
+add();
+creatFood();
+}
+
+for(var i=0;i<balls.length;i++)
+{
+ball=balls[i];
+if(i==balls.length-1)
+{
+ctx.fillStyle="lightgreen";
+}
+else
+{
+ctx.fillStyle="red";
+}
+if(ball.x>1350)
+{
+//ball.x=0;
+alert("GAME OVER!!!!!!...... SCORE IS :"+score);
+init();
+
+}
+else if(ball.x<0)
+{
+//ball.x=1350;
+alert("GAME OVER!!!!!!...... SCORE IS :"+score);
+init();
+}
+else if(ball.y<0)
+{
+//ball.y=600;
+alert("GAME OVER!!!!!!...... SCORE IS :"+score);
+init();
+}
+else if(ball.y>600)
+{
+//ball.y=0;
+alert("GAME OVER!!!!!!...... SCORE IS :"+score);
+init();
+}
+if(ball.x==lastBall.x&&ball.y==lastBall.y&&i<balls.length-2)
+{
+alert("GAME OVER!!!!!!...... SCORE IS :"+score);
+init();
+}
+ctx.fillRect(ball.x,ball.y,19,19);
+}
+ctx.fillRect(food.x*20,food.y*20,19,19);
+ctx.fillText("SCORE : " +score,1200,560);
+}
+setInterval(ani,150);
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
